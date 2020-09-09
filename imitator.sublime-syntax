@@ -1,0 +1,151 @@
+%YAML 1.2
+---
+name: imitator
+file_extensions:
+  - imi
+  - imiprop
+scope: syntax.imitator
+
+variables:
+  integer: (?:[0-9]*)
+
+  identifier: '[a-zA-Z][a-zA-Z0-9''_]*'
+  storage_classes: 'parameter|clock|discrete|constant'
+  keywords: 'var|automaton|synclabs|loc|accepting|urgent|invariant|when|sync|goto|stop|do|if|then|else|end|init|in|step'
+  property_keywords: 'property|projectresult'
+  imi_properties: 'AF|AGnot|EFpmin|EFpmax|EFtmin|inf_cycle|inf_cycle_through|NZ_inf_cycle_check|NZ_inf_cycle_transform|deadlockfree|IM|IMconvex|IMK|IMunion|PRP|BCcover|BCshuffle|BCrandom|BCrandomseq|PRPC'
+  patterns: 'has happened|everytime|once|before|within|eventually|next|sequence|always'
+  predicate: 'is in|is not in'
+
+contexts:
+  storage_classes:
+    - match: \b({{storage_classes}})\b
+      scope: storage.type.imitator
+
+  declarations:
+    - match: \b(var)\b
+      scope: keyword.declaration.variables.imitator
+    - match: \b({{imi_properties}})\s*(\;)
+      captures:
+        1: variable.parameter.property.imitator
+        2: entity.eol.imitator
+    - match: \b({{imi_properties}})\s*(\()
+      captures:
+        1: variable.parameter.property.imitator
+        2: entity.argument.start.imitator
+    - match: \b({{patterns}})\s*(\;)
+      captures:
+        1: keyword.parameter.pattern.imitator
+        2: entity.eol.imitator
+    - match: \b({{patterns}})\b
+      scope: keyword.parameter.pattern.imitator
+    - match: \b(step)\s*(=)
+      captures:
+        1: keyword.step.imitator
+        2: keyword.operator.assignment.imitator
+      push:
+        - match: ({{integer}})
+          scope: constant.numeric.integer.imitator
+          captures:
+            1: punctuation.definition.numeric.imitator
+          pop: true
+    - match: \b({{identifier}})\s*(=)
+      captures:
+        # 1: variable.parameter.imitator
+        2: keyword.operator.assignment.imitator
+      push:
+        - match: ({{integer}})
+          scope: constant.numeric.integer.imitator
+          captures:
+            1: punctuation.definition.numeric.imitator
+          pop: true
+
+  decl_automaton:
+    - match: \b(automaton)\s+([a-zA-Z0-9''_]*)\b
+      scope: keyword.automaton.imitator
+      captures:
+        1: keyword.automaton.imitator
+        2: entity.name.imitator
+      push:
+        - match: \b(end)\b
+          captures:
+            1: keyword.imitator
+            2: punctuation.terminator.expression.imitator
+          pop: true
+        - include: main
+
+  decl_sync:
+    - match: \b(synclabs)\b
+      scope: keyword.synclab.imitator
+    - match: \b({{identifier}})\s*(\;)
+      captures:
+        # 1: variable.parameter.imitator
+        2: entity.eol.imitator
+
+  decl_loc:
+    - match: \b(loc)\b
+      scope: meta.loc.imitator
+      captures:
+        1: keyword.control.loc.imitator
+    - match: \b(\;\n)\b
+      captures:
+        1: keyword.control.loc.imitator
+ 
+  main:
+    - include: comments
+    - include: storage_classes
+    - include: operators
+    - include: declarations
+    - include: constants
+    - include: decl_automaton
+    - include: decl_sync
+    - include: decl_loc
+    - match: \b({{keywords}}|{{property_keywords}}|{{predicate}})\b
+      scope: keyword.control.imitator
+    - match: \s*(#\s*(synth|witness|exhibit))\b
+      scope: entity.name.imitator
+
+  comments:
+    - match: \(\*+(\*)\)
+      scope: comment.block.imitator
+      captures:
+        1: comment.block.empty.imitator
+    - match: \(\*
+      push:
+        - meta_scope: comment.block.imitator
+        - match: \*\)
+          pop: true
+        - include: comments
+    - match: '(?=[^\\])(")'
+      push:
+        - meta_scope: comment.block.string.quoted.double.imitator
+        - match: '"'
+          pop: true
+        - match: '\\(x[a-fA-F0-9][a-fA-F0-9]|[0-2]\d\d|[bnrt''"\\])'
+          scope: comment.block.string.constant.character.escape.imitator
+
+  constants:
+    - match: \b(True|False)\b
+      scope: constant.language.boolean.imitator
+    - match: ({{integer}})
+      scope: constant.numeric.integer.imitator
+      captures:
+        1: punctuation.definition.numeric.imitator
+    - match: '\d+.*\b'
+      scope: invalid.illegal.numeric.imitator
+
+  operators:
+    - match: <\=|>\=|\=|<|>|\<\>
+      scope: keyword.operator.comparison.imitator
+    - match: \+|\-|\*|\/
+      scope: keyword.operator.arithmetic.imitator
+    - match: \||\&
+      scope: keyword.operator.boolean.imitator
+    - match: 'not '
+      scope: keyword.operator.boolean.imitator
+    - match: '(not)\('
+      captures: 
+        1: keyword.operator.boolean.imitator
+    - match: \:\=
+      scope: keyword.operator.assignment.imitator
+
