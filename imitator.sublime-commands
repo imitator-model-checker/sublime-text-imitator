@@ -1,0 +1,22 @@
+[
+  { "caption": "Preferences: imitator",
+    "command": "edit_settings",
+    "args": {
+      "base_file": "${packages}/imitator/imitator.sublime-settings",
+      "default": "{\n\t$0\n}\n"
+    }
+  },
+  { "caption": "Preferences: imitator Key Bindings",
+    "command": "edit_settings",
+    "args": {
+      "base_file": "${packages}/imitator/Default (${platform}).sublime-keymap",
+      "default": "[\n\t$0\n]\n"
+    }
+  },
+  { "caption": "imitator: Open Readme",
+    "command": "open_file",
+    "args": {
+      "file": "${packages}/imitator/README.md"
+    }
+  },
+]

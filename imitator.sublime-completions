@@ -1,0 +1,9 @@
+{
+	"scope": "syntax.imitator",
+
+	"completions": [
+		{ "trigger": "var", "contents": "var\n\t$1 : clock;\n\t$2 : parameter;\n\t$3 : discrete;\n\t$4 : constant;\n" },
+		{ "trigger": "aut", "contents": "automaton\nsynclabs: $1;\n$0\nend" },
+		{ "trigger": "loc", "contents": "loc $1: invariant $2\n\twhen $3 sync $4 do {$5} goto $6;\n" },
+	]
+}

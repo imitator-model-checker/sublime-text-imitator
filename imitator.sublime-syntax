@@ -11,7 +11,8 @@ variables:
 
   identifier: '[a-zA-Z][a-zA-Z0-9''_]*'
   storage_classes: 'parameter|clock|discrete|constant'
-  keywords: 'var|automaton|synclabs|loc|accepting|urgent|invariant|when|sync|goto|stop|do|if|then|else|end|init|in|step'
+  keywords: 'var|automaton|synclabs|when|sync|goto|stop|do|if|then|else|end|in|step'
+  locations: 'loc|accepting|urgent|invariant|init'
   property_keywords: 'property|projectresult'
   imi_properties: 'AF|AGnot|EFpmin|EFpmax|EFtmin|inf_cycle|inf_cycle_through|NZ_inf_cycle_check|NZ_inf_cycle_transform|deadlockfree|IM|IMconvex|IMK|IMunion|PRP|BCcover|BCshuffle|BCrandom|BCrandomseq|PRPC'
   patterns: 'has happened|everytime|once|before|within|eventually|next|sequence|always'
@@ -86,11 +87,11 @@ contexts:
     - match: \b(loc)\b
       scope: meta.loc.imitator
       captures:
-        1: keyword.control.loc.imitator
+        1: entity.name.loc.imitator
     - match: \b(\;\n)\b
       captures:
         1: keyword.control.loc.imitator
- 
+
   main:
     - include: comments
     - include: storage_classes
@@ -100,6 +101,8 @@ contexts:
     - include: decl_automaton
     - include: decl_sync
     - include: decl_loc
+    - match: \b({{locations}})\b
+      scope: entity.name.locations.imitator
     - match: \b({{keywords}}|{{property_keywords}}|{{predicate}})\b
       scope: keyword.control.imitator
     - match: \s*(#\s*(synth|witness|exhibit))\b
@@ -144,7 +147,7 @@ contexts:
     - match: 'not '
       scope: keyword.operator.boolean.imitator
     - match: '(not)\('
-      captures: 
+      captures:
         1: keyword.operator.boolean.imitator
     - match: \:\=
       scope: keyword.operator.assignment.imitator
