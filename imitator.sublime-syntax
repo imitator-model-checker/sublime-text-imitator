@@ -14,7 +14,7 @@ variables:
   keywords: 'var|automaton|synclabs|when|sync|goto|stop|do|if|then|else|end|in|step'
   locations: 'loc|accepting|urgent|invariant|init'
   property_keywords: 'property|projectresult'
-  imi_properties: 'AF|AGnot|EFpmin|EFpmax|EFtmin|inf_cycle|inf_cycle_through|NZ_inf_cycle_check|NZ_inf_cycle_transform|deadlockfree|IM|IMconvex|IMK|IMunion|PRP|BCcover|BCshuffle|BCrandom|BCrandomseq|PRPC'
+  imi_properties: 'AF|AGnot|EFpmin|EFpmax|EFtmin|Cycle|Loop|CycleThrough|LoopThrough|NZ_Cycle|DeadlockFree|IM|InverseMethod|TracePreservation|IMconvex|IMK|IMunion|PRP|BCcover|BCshuffle|BCrandom|BCrandomseq|PRPC|pattern'
   patterns: 'has happened|everytime|once|before|within|eventually|next|sequence|always'
   predicate: 'is in|is not in'
 
